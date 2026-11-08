@@ -16,5 +16,45 @@ public class Passenger {
         return name;
     }
 
+    public String getFlightnumber(){
+        return flightNumber;
+    }
 
+    public int getQueueNumber(){
+        return queueNumber;
+    }
+
+    public boolean isPriority(){
+        return isPriority;
+    }
+
+    public String getStatus(){
+        return screeningStatus;
+    }
+
+    public void setStatus(String s){
+        screeningStatus = s;
+    }
+
+    public void setPriority(boolean p){
+        isPriority = p;
+    }
+
+    public boolean equals(Object obj){
+        if(obj == null || !(obj instanceof Passenger)){
+            return false;
+        }
+        if(this == obj){
+            return true;
+        }
+        Passenger other = (Passenger)(obj);
+        return this.name.equals(other.name) && this.flightNumber.equals(other.flightNumber);
+
+    }
+
+    public String toString(){
+        return "Passenger: " + name + "   Flight: " + flightNumber 
+            + "\nQueue Number: " + queueNumber + "   Priority: " + isPriority
+            + "\nScreening Status: " + screeningStatus;
+    }
 }
