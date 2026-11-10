@@ -64,11 +64,10 @@ public class Queue<T> {
         }
 
         T front = firstNode.getData();
-        if(firstNode == lastNode){
+        firstNode = firstNode.getNext();
+
+        if(firstNode == null){
             lastNode = null;
-        }
-        else{
-            firstNode = firstNode.getNext();
         }
         size--;
         return front;
@@ -92,36 +91,36 @@ public class Queue<T> {
         return -1;
     }
 
-   public boolean remove(T entry) {
-    Node<T> curr = firstNode;
-    Node<T> prev = null;
+    public boolean remove(T entry) {
+        Node<T> curr = firstNode;
+        Node<T> prev = null;
 
-    while (curr != null) {
-        if (curr.getData().equals(entry)) {
-            if (prev == null) {
-                firstNode = curr.getNext();
-            }
-            else {
-                prev.setNext(curr.getNext());
+        while (curr != null) {
+            if (curr.getData().equals(entry)) {
+                if (prev == null) {
+                    firstNode = curr.getNext();
+                }
+                else {
+                    prev.setNext(curr.getNext());
+                }
+
+                if (curr == lastNode) {
+                    lastNode = prev;
+                }
+
+                size--;
+                return true;
             }
 
-            if (curr == lastNode) {
-                lastNode = prev;
-            }
-
-            size--;
-            return true;
+            prev = curr;
+            curr = curr.getNext();
         }
 
-        prev = curr;
-        curr = curr.getNext();
+        return false;
     }
 
-    return false;
-}
-
-    public T[] toArray(){
-        T[] array = (T[]) new Object[size];
+    public Object[] toArray(){
+        Object[] array = new Object[size];
         Node<T> curr = firstNode;
         int i = 0;
         while(curr != null){
