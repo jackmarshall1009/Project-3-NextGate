@@ -102,7 +102,7 @@ Airport security queue system that allows customers to check in ahead of time an
 | `SecuritySystem.java` | Jack | Wrote, GenAI-assisted |
 | `SecurityView.java` | Ethan, Jack | Ethan wrote the menus and input loops. Jack revised it to take the shared `Scanner` and added the methods `Main` needs (`readText`, `readLane`, `showLine`, `showError`, `showStats`), GenAI-assisted |
 | `Main.java` | Jack | Wrote, GenAI-assisted |
-| `QueueTest.java` | Ethan | Wrote |
+| `QueueTest.java` | Ethan | Wrote | GenAI-assisted
 | `PassengerTest.java` | Tiffany | Wrote (in progress) |
 | `SecuritySystemTest.java` | Ethan | Not yet written |
 | `SecurityViewTest.java` | Ethan | Not yet written |
