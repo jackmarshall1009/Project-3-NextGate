@@ -6,13 +6,13 @@ import java.util.Scanner;
  *  queue itself
  * 
  *  @author Ethan
- *  @version Nov 11, 2026
+ *  @version 2
  */
 
 public class SecurityView 
 {
-    private static final int START_OPTIONS = 2;
-    private static final int OFFICER_OPTIONS = 6;
+    private static final int START_OPTIONS = 3;
+    private static final int OFFICER_OPTIONS = 7;
     private static final int PASSENGER_OPTIONS = 4;
     
     private Scanner scanner;
@@ -31,13 +31,21 @@ public class SecurityView
      */
     public void showStartMenu()
     {
-        System.out.println("Welcome to Next Gate Security System!\n\nPlease "
-            + "specify user interface type:\n\n1. Security Officer\n\n2. "
-            + "Passenger");
         System.out.println();
+        System.out.println("Welcome to Next Gate Security System!");
         System.out.println("Please specify user type:");
         System.out.println("1. Security Officer");
         System.out.println("2. Passenger");
+        System.out.println("3. Quit");
+    }
+
+    /**
+     * Shows the start menu and returns the user's choice.
+     */
+    public int getStartChoice() 
+    {
+        showStartMenu();
+        return readChoice(START_OPTIONS);
     }
     
     /**
@@ -47,12 +55,13 @@ public class SecurityView
     {
         System.out.println();
         System.out.println("Security Officer Menu");
-        System.out.println("1. Screen next passenger");
-        System.out.println("2. View next passenger");
-        System.out.println("3. View full line");
-        System.out.println("4. Remove a passenger");
+        System.out.println("1. Call next passenger");
+        System.out.println("2. Screen current passenger");
+        System.out.println("3. Mark no-show");
+        System.out.println("4. View all lines");
         System.out.println("5. View line size");
-        System.out.println("6. Exit");
+        System.out.println("6. View end of day statistics");
+        System.out.println("7. Back");
     }
     
     /**
@@ -69,18 +78,18 @@ public class SecurityView
      */
     public void showPassengerMenu()
     {
+        System.out.println();
         System.out.println("Passenger Menu");
         System.out.println("1. Join the line");
         System.out.println("2. Check my position");
         System.out.println("3. Leave the line");
-        System.out.println("4. Exit");
-        
+        System.out.println("4. Back");
     }
     
     /**
      * Prints the passenger menu
      */
-    public int getPassengerChocie()
+    public int getPassengerChoice()
     {
         showPassengerMenu();
         return readChoice(PASSENGER_OPTIONS);
@@ -97,7 +106,7 @@ public class SecurityView
         
         while (!valid)
         {
-            System.out.println("Enter a choice (1 -" + max + "): ");
+            System.out.print("Enter a choice (1-" + max + "): ");
             String input = scanner.nextLine().trim();
             
             try
@@ -143,6 +152,37 @@ public class SecurityView
             System.out.println("Please type y or n.");
         }
     }
+
+    /**
+     * Prints a prompt and returns what the user typed.
+     */
+    public String readText(String prompt)
+    {
+        System.out.print(prompt + ": ");
+        return scanner.nextLine().trim();
+    }
+
+    /**
+     * Asks which screening lane to use
+     */
+    public SecuritySystem.ScreeningLane readLane()  
+    {
+        System.out.println("Which lane?");
+        System.out.println("1. Standard");
+        System.out.println("2. Priority");
+        System.out.println("3. Rescreen");
+        int choice = readChoice(3);
+
+        if (choice == 2)
+        {
+            return SecuritySystem.ScreeningLane.PRIORITY;
+        }
+        else if (choice == 3)
+        {
+            return SecuritySystem.ScreeningLane.RESCREEN;
+        }
+        return SecuritySystem.ScreeningLane.STANDARD;
+    }
     
     /**
      * Prints one passenger, or a message if there isn't one
@@ -151,7 +191,7 @@ public class SecurityView
     {
         if (passenger == null)
         {
-            System.out.println("There is no passenger to show.");
+            System.out.println("No passenger is currently being screened.");
             
         }
         else
@@ -161,32 +201,31 @@ public class SecurityView
     }
     
     /**
-     * Print every passenger in the line from front to back
-     * 
+     * Prints one lane: who is being screened and who is waiting
      */
-    public void showLine(Queue<Passenger> line)
+    public void showLine(String laneName, Passenger current, String[] line)
     {
-        if (line.isEmpty())
+        System.out.println();
+        System.out.println("--- " + laneName + " Lane ---");
+        System.out.print("Now screening: ");
+        showPassenger(current);
+
+        if (line.length == 0)
         {
             System.out.println("The line is empty.");
             return;
         }
-        
-        Object[] passengers = line.toArray();
-        
-        System.out.println("Current Line");
-        for (int i = 0; i < passengers.length; i++)
+        for (int i = 0; i < line.length; i++)
         {
-            System.out.println((i+1) + ". " + passengers[i]);
-            System.out.println();
+            System.out.println((i + 1) + ". " + line[i]);
         }
     }
     
     /**
-     * Prints where a passenger is in line
+     * Prints where a passenger is in line and shows estimated wait time
      * 
      */
-    public void showPosition(int position)
+    public void showPosition(int position, int waitMinutes)
     {
         if (position == -1)
         {
@@ -195,23 +234,45 @@ public class SecurityView
         else
         {
             System.out.println("You are number " + position + " in line.");
+            System.out.println("Estimated wait time: " + waitMinutes + " minutes.");
         }
     }
     
     /**
-     * Prints how many passengers are waitiing
+     * Prints how many passengers are waiting
      * 
      */
     public void showLineSize(int size)
     {
         System.out.println("Passengers waiting: " + size);
     }
+
+    /**
+     * Prints an error
+     */
+    public void showError(String message)
+    {
+        System.out.println("ERROR: " + message);
+    }
+
+    /**
+     * Prints the end of day summary
+     */
+    public void showStats(int screened, int rescreened, int cancelled, int noShows)
+    {
+        System.out.println();
+        System.out.println("End of Day Stats");
+        System.out.println("Screened:   " + screened);
+        System.out.println("Rescreened: " + rescreened);
+        System.out.println("Cancelled:  " + cancelled);
+        System.out.println("No-shows:   " + noShows);
+    }
     
     /**
-     * Prints any message, like a confirmation or error.
+     * Prints any confirmation messages
      * 
      */
-    public void showMessage(String message)
+    public void showConfirmation(String message)
     {
         System.out.println(message);
     }
@@ -222,6 +283,6 @@ public class SecurityView
      */
     public void showGoodbye()
     {
-        System.out.println("Thnak you for using Next Gate. Goodbye!");
+        System.out.println("Thank you for using Next Gate. Goodbye!");
     }
 }
