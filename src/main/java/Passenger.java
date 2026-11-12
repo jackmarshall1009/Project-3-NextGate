@@ -17,7 +17,7 @@ public class Passenger {
         return name;
     }
 
-    public String getFlightnumber(){
+    public String getFlightNumber(){
         return flightNumber;
     }
 
