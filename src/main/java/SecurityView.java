@@ -20,9 +20,9 @@ public class SecurityView
     /**
      * Creating a new SecurityView
      */
-    public SecurityView()
+    public SecurityView(Scanner scanner)
     {
-        scanner = new Scanner(System.in);
+        this.scanner = scanner;
     }
     
     
