@@ -41,6 +41,7 @@ public class Passenger {
         isPriority = p;
     }
 
+    @Override 
     public boolean equals(Object obj){
         if(obj == null || !(obj instanceof Passenger)){
             return false;
@@ -49,10 +50,13 @@ public class Passenger {
             return true;
         }
         Passenger other = (Passenger)(obj);
-        return this.name.equals(other.name) && this.flightNumber.equals(other.flightNumber);
+        return this.name.toLowerCase().equals(other.name.toLowerCase()) && 
+            this.flightNumber.toLowerCase().equals(other.flightNumber.toLowerCase());
 
     }
 
+    
+    @Override 
     public String toString(){
         return "Passenger: " + name + "   Flight: " + flightNumber 
             + "\nQueue Number: " + queueNumber + "   Priority: " + isPriority
