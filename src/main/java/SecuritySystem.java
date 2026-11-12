@@ -1,10 +1,12 @@
 import java.util.Random;
 
 public class SecuritySystem {
-    public enum ScreeningLane {STANDARD, PRIORITY, RESCREEN}
+    public enum ScreeningLane {
+        STANDARD, PRIORITY, RESCREEN
+    }
 
     public static final int MINUTES_PER_PASSENGER = 3;
-    
+
     private Queue<Passenger> standardQueue;
     private Queue<Passenger> priorityQueue;
     private Queue<Passenger> rescreenQueue;
@@ -21,7 +23,6 @@ public class SecuritySystem {
 
     private Random random = new Random();
     private int rescreenChance = 10;
-    
 
     public SecuritySystem() {
         standardQueue = new Queue<>();
@@ -30,7 +31,7 @@ public class SecuritySystem {
         nextQueueNumber = 1;
     }
 
-   // Lane helper methods
+    // Lane helper methods
 
     private Queue<Passenger> getQueue(ScreeningLane lane) {
         if (lane == ScreeningLane.PRIORITY) {
@@ -61,11 +62,11 @@ public class SecuritySystem {
             currentStandardPassenger = p;
         }
     }
-// Check-in and Cancellation
+    // Check-in and Cancellation
 
     public int checkIn(String name, String flightNumber, boolean priority) {
         if (name == null || name.trim().isEmpty()
-            || flightNumber == null || flightNumber.trim().isEmpty()) {
+                || flightNumber == null || flightNumber.trim().isEmpty()) {
             throw new IllegalArgumentException("Please provide both name and flight number.");
         }
         name = name.trim();
@@ -93,9 +94,10 @@ public class SecuritySystem {
     }
 
     public boolean cancel(String name, String flightNumber) {
-        Passenger p = new Passenger(name.trim(), flightNumber.trim().toUpperCase(), 0,false);
+        Passenger p = new Passenger(name.trim(), flightNumber.trim().toUpperCase(), 0, false);
 
-        if (p.equals(currentStandardPassenger) || p.equals(currentPriorityPassenger) || p.equals(currentRescreenPassenger)) {
+        if (p.equals(currentStandardPassenger) || p.equals(currentPriorityPassenger)
+                || p.equals(currentRescreenPassenger)) {
             throw new IllegalStateException("Current passenger is currently being screened and cannot be canceled.");
         }
 
@@ -118,11 +120,12 @@ public class SecuritySystem {
         return rescreenQueue.positionOf(p);
     }
 
-// Officer Actions
+    // Officer Actions
 
     public Passenger callNext(ScreeningLane lane) {
         if (currentPassenger(lane) != null) {
-            throw new IllegalStateException("Cannot call next passenger; clear or rescreen the current passenger first.");
+            throw new IllegalStateException(
+                    "Cannot call next passenger; clear or rescreen the current passenger first.");
         }
         if (getQueue(lane).isEmpty()) {
             throw new IllegalStateException("No passengers are currently waiting.");
@@ -171,14 +174,14 @@ public class SecuritySystem {
         Passenger p = currentPassenger(lane);
         if (p == null) {
             throw new IllegalStateException(
-                "Nobody is being screened right now.");
+                    "Nobody is being screened right now.");
         }
         p.setStatus("NO_SHOW");
         noShowCount++;
         setCurrent(lane, null);
         return p.getName() + " was marked as a no-show.";
     }
-// Stats and Display
+    // Stats and Display
 
     public String[] getLine(ScreeningLane lane) {
         Object[] items = getQueue(lane).toArray();
