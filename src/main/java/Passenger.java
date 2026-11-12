@@ -10,6 +10,7 @@ public class Passenger {
         flightNumber = f;
         queueNumber = q;
         isPriority = p;
+        screeningStatus = "Waiting";
     }
 
     public String getName(){
