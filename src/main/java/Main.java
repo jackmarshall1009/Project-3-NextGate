@@ -17,7 +17,7 @@ public class Main {
         app.run();
     }
 
-    // Preloaded Passengers for testing purposes
+    // Preloaded Passengers for demo purposes
 
     public static void preLoadedPassengers(SecuritySystem system) {
         system.checkIn("Jack", "AA123", true);
