@@ -82,10 +82,10 @@ Airport security queue system that allows customers to check in ahead of time an
         - Update all five test classes for any final changes
         - Null and duplicate check-in tests
         - SecurityView changes, if any are needed
-    - [TODO: Jack or Tiffany]
+    - Jack:
         - Null fix in `Queue`
         - Duplicate check-in fix in `SecuritySystem`
-    - [TODO: Jack or Tiffany]
+    - Tiffany
         - Status constants, rescreen stat decision, and the lane-based wait estimate
     - Whole team
         - Demo practice and the final README
