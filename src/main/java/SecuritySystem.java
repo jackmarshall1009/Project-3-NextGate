@@ -22,7 +22,7 @@ public class SecuritySystem {
     private int noShowCount;
 
     private Random random = new Random();
-    private int rescreenChance = 10;
+    private int rescreenChance = 50; // set to 50% for proof of concept; can be adjusted later
 
     public SecuritySystem() {
         standardQueue = new Queue<>();
@@ -131,7 +131,9 @@ public class SecuritySystem {
             throw new IllegalStateException("No passengers are currently waiting.");
         }
         Passenger p = getQueue(lane).dequeue();
-        p.setStatus("SCREENING");
+        if (!p.getStatus().equals("SCREENING_ATTEMPT_2")) {
+            p.setStatus("SCREENING");
+        }
         setCurrent(lane, p);
         return p;
     }
@@ -159,9 +161,27 @@ public class SecuritySystem {
         return p;
     }
 
+    public Passenger retryScreening(ScreeningLane lane) {
+        Passenger p = currentPassenger(lane);
+        if (p == null) {
+            throw new IllegalStateException("No passenger is currently being screened.");
+        }
+        p.setStatus("SCREENING_ATTEMPT_2");
+        getQueue(lane).enqueueFront(p);
+        setCurrent(lane, null);
+        return p;
+    }
+
     public Passenger screenPassenger(ScreeningLane lane) {
+        Passenger p = currentPassenger(lane);
+        if (p == null) {
+            throw new IllegalStateException("No passenger is currently being screened.");
+        }
         if (random.nextInt(100) < rescreenChance) {
-            return sendToRescreen(lane);
+            if (lane == ScreeningLane.RESCREEN || p.getStatus().equals("SCREENING_ATTEMPT_2")) {
+                return sendToRescreen(lane);
+            }
+            return retryScreening(lane);
         }
         return clearPassenger(lane);
     }

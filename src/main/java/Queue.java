@@ -131,4 +131,16 @@ public class Queue<T> {
         return array;
     }
 
+    public void enqueueFront(T newEntry) {
+        Node<T> newNode = new Node<>(newEntry);
+        if (isEmpty()) {
+            firstNode = newNode;
+            lastNode = newNode;
+        } else {
+            newNode.setNext(firstNode);
+            firstNode = newNode;
+        }
+        size++;
+    }
+
 }

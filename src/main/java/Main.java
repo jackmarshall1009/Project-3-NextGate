@@ -11,8 +11,23 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
-        Main app = new Main(new SecuritySystem(), new SecurityView(input));
+        SecuritySystem system = new SecuritySystem();
+        preLoadedPassengers(system);
+        Main app = new Main(system, new SecurityView(input));
         app.run();
+    }
+
+    // Preloaded Passengers for testing purposes
+
+    public static void preLoadedPassengers(SecuritySystem system) {
+        system.checkIn("Jack", "AA123", true);
+        system.checkIn("Ethan", "AA303", true);
+        system.checkIn("Tiffany", "UA909", true);
+        system.checkIn("John", "AA823", false);
+        system.checkIn("Paul", "SW123", false);
+        system.checkIn("Mary", "AA123", false);
+        system.checkIn("Jane", "AA123", false);
+        system.checkIn("Bob", "AA123", false);
     }
 
     // Start Menu
@@ -58,6 +73,8 @@ public class Main {
                     Passenger p = system.screenPassenger(view.readLane());
                     if (p.getStatus().equals("CLEARED")) {
                         view.showConfirmation(p.getName() + " has been cleared.");
+                    } else if (p.getStatus().equals("SCREENING_ATTEMPT_2")) {
+                        view.showConfirmation(p.getName() + " has been sent back to the front to be re-screened again.");
                     } else {
                         view.showConfirmation(p.getName() + " has been sent to be rescreened.");
                     }

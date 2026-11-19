@@ -1,9 +1,7 @@
 
-import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
-public class PassengerTest {
+public class PassengerTest extends student.TestCase{
 
     private Passenger passenger1;
 
