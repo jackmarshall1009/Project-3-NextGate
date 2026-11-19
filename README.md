@@ -17,31 +17,48 @@ Airport security queue system that allows customers to check in ahead of time an
 - `QueueTest` exercises the queue logic on its own (enqueue, dequeue, peek, remove from the middle, position lookup, and toArray) using both Strings and Passengers.
 
 # Reflection
-- **Changes from the Spec**
-    - Two menu system for choosing if you are a 'Security Officer' or 'Passenger'
-        - Originally was going to be options in one menu but this flowed better we thought
-    - Scanner is created in Main and passed into SecurityView which reads the menus and choices
-        - Originally the scanner was going to only exist in main but we thought this way will make for easier testing and future modulation
-    - Dropped the scanner parameter in the constructor in Main
-        - As stated above, is now passed into SecurityView instead
-    - Created two handle command methods, one for officer and one for passenger
-        - Originally was just going to be a single method but needed to split it when we introduced the two menu system
-    - Added a rng of 10% to determine which passengers are sent to rescreening
-        - Originally was going to be a manual choice by the officer but we thought this would better simulate screenings
-    - In general, added additional helper methods to multiple classes to help make the code more modular
-        - Not in spec
-   
-- **Does the Model Stand Alone?**
-    - Yes, the SecuritySystem, Passenger, and Queue classes never print, read input, or reference the view or controller classes. All of the rule checks and logic is handled in the model, and throws exceptions when needed.
+- **How Did Our Design Absorb the Change?**
+    - Classes the feature actually touched
+        - `Queue`: added `enqueueFront(T newEntry)`
+        - `SecuritySystem`: added a new `retryScreening` method, changed `screenPassenger` to decide between a second attempt and the Rescreen lane, and changed `callNext` so it keeps the "SCREENING_ATTEMPT_2" status
+        - `Main`: added a third message for officer option 2, "[name] has been sent back to the front to be re-screened again"
+    - What matched our D3 prediction
+        - `Queue`, `SecuritySystem`, and `Main` changed, just like we predicted
+        - `Queue` only gained one new method and none of its old methods changed, so the deque idea from our scope fit in cleanly
+    - What surprised us
+        - We predicted `sendToRescreen` would change, but it didn't. Instead we added a separate `retryScreening` method and put the decision in `screenPassenger`. This kept `sendToRescreen` doing one job
+        - We predicted `SecurityView` would change (`showConfirmation`), but it didn't need to. `showConfirmation` already prints any message, so the new message went through it with no changes
+        - `Passenger` changed even though the feature didn't need it: [TODO: why, e.g. the status now starts as "Waiting", `getFlightnumber` was renamed to `getFlightNumber`, and `equals` now ignores capitalization]
 
-- **Unknowns from the Scope**
-   - Figured out how to handle multiple security lanes by using a generic queue and creating three separate queues from it that inherent the logic
-   - Solved estimated wait time model by having a 3 minute final static field and multiplying it by the number of customers in each line
+- **Did the Change Cross the Model/View Line?**
+    - No. `SecurityView` didn't have to learn anything new about the model. The officer still picks a lane with `readLane` and sees the result through `showConfirmation`
+    - One small ripple: `Main` has to know the exact status String "SCREENING_ATTEMPT_2" to pick the right message. If someone renamed that status in `SecuritySystem`, `Main` would quietly print the wrong message without an error. A constant or a method like `isSecondAttempt()` in the model would fix that
 
-- **What Doesn’t Work Yet?** 
-   - Need to finish writing JUnit tests for most classes
-   - User quality of life fixes can be made still (‘getPosition’ doesn’t tell the user what line they are in)
-   - Need to fix PassengerTest so it compiles and runs correctly
+- **What Changed From Our D3 Plan?**
+    - Feature: same feature as planned (send rescreened passengers back to the front), no switch
+    - Signatures
+        - New public method `retryScreening(ScreeningLane lane)` instead of putting the logic inside `sendToRescreen`
+        - The status is called "SCREENING_ATTEMPT_2" instead of "SECOND_PASS"
+    - Logic
+        - The decision between a second attempt and the Rescreen lane lives in `screenPassenger`
+        - A first failed scan doesn't count toward the rescreen stat. Only a second failed scan does
+        - The rescreen chance went from 10% to 50% so the feature shows up more often during testing and the demo
+        - Added `preLoadedPassengers` in `Main` so the demo starts with 8 passengers already in line
+    - Validation
+        - `readText` in the view no longer rejects blank input. Blank names and flight numbers are now caught by `checkIn` in the model, which shows an error instead of crashing
+        - `Passenger.equals` now ignores capitalization, so "ANA" and "Ana" on the same flight count as the same person
+    - Tests
+        - We planned tests for `Queue` rejecting null, but `Queue` doesn't reject null yet, so those tests aren't included
+        - We planned a test that both failed scans add to the rescreen count. That doesn't match how the code works now, so the test checks that only the second one counts
+        - Added `PassengerTest`, `SecurityViewTest`, and `MainTest`, which weren't in the D3 plan
+
+- **What Doesn't Work Yet?**
+    - `Queue` doesn't reject null. If null is ever added, `positionOf` and `remove` crash. The app itself never adds null, so this can't happen through the menus
+    - A passenger who is currently being screened can check in again, because the duplicate check only looks at the waiting lines
+    - A first failed scan isn't counted in the end of day stats
+    - The wait estimate always uses the Standard lane, so priority and rescreen passengers see the same estimate as standard passengers at the same position
+    - Whether a passenger fails is random, so during a demo the second attempt might not show up right away
+    - [TODO: anything else the team knows about]
 
 
 
