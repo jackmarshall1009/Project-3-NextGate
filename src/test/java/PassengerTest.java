@@ -1,68 +1,118 @@
-
-import org.junit.Test;
-
-public class PassengerTest extends student.TestCase{
-
-    private Passenger passenger1;
-
-    public void setUp() {
-        passenger1 = new Passenger("John Doe", "AAA123", 1, true);
-    }
-
-    /**
-     * Tests getName method
-     */
-    public void testGetName() {
-        assertEquals("John Doe", passenger1.getName());
-    }
+/**
+ * Tests for the Passenger class in Next Gate.
+ *
+ * @author Ethan
+ * @version Nov 19, 2026
+ */
+public class PassengerTest extends student.TestCase
+{
+    private Passenger ana;
 
     /**
-     * Tests getFlightNumber method
+     * Runs before every test. Makes one standard passenger.
      */
-    public void testGetFlightNumber() {
-        assertEquals("AAA123", passenger1.getFlightNumber());
+    public void setUp()
+    {
+        ana = new Passenger("Ana", "AA100", 1, false);
     }
 
+
+    // ----------------------------------------------------------
     /**
-     * Tests getQueueNumber method
+     * Tests that the constructor stores everything and the status
+     * starts as "Waiting".
      */
-    public void testGetQueueNumber() {
-        assertEquals(1, passenger1.getQueueNumber());
+    public void testConstructorAndGetters()
+    {
+        assertEquals("Ana", ana.getName());
+        assertEquals("AA100", ana.getFlightNumber());
+        assertEquals(1, ana.getQueueNumber());
+        assertFalse(ana.isPriority());
+        assertEquals("Waiting", ana.getStatus());
     }
 
-    /**
-     * Tests getPriority and setPriority methods
-     */
-    public void testIsPriority() {
-        assertTrue(passenger1.isPriority());
 
-        passenger1.setPriority(false);
-        assertFalse(passenger1.isPriority());
+    // ----------------------------------------------------------
+    /**
+     * Tests setStatus and setPriority.
+     */
+    public void testSetters()
+    {
+        ana.setStatus("SCREENING");
+        ana.setPriority(true);
+
+        assertEquals("SCREENING", ana.getStatus());
+        assertTrue(ana.isPriority());
     }
 
+
+    // ----------------------------------------------------------
     /**
-     * Tests getStatus and setStatus methods
+     * Tests that a passenger equals itself.
      */
-    public void testGetStatus() {
-        // Depends on the initial status in your Passenger constructor
-        // and the available status getter/setter.
+    public void testEqualsSameObject()
+    {
+        assertTrue(ana.equals(ana));
     }
 
-    /**
-     * Tests equals method
-     */
-    public void testEquals() {
-        Passenger passenger2 =
-            new Passenger("John Doe", "AAA123", 1, true);
 
-        assertEquals(passenger1, passenger2);
+    // ----------------------------------------------------------
+    /**
+     * Tests that two passengers with the same name and flight are
+     * equal, even with a different queue number, priority, or
+     * capitalization.
+     */
+    public void testEqualsSameNameAndFlight()
+    {
+        Passenger copy = new Passenger("Ana", "AA100", 9, true);
+        Passenger lower = new Passenger("ana", "aa100", 2, false);
+
+        assertTrue(ana.equals(copy));
+        assertTrue(ana.equals(lower));
     }
 
+
+    // ----------------------------------------------------------
     /**
-     * Tests toString method
+     * Tests that a different name or a different flight makes two
+     * passengers not equal.
      */
-    @Test
-    public void testToString() {
-        assertNotNull(passenger1.toString());
+    public void testEqualsDifferent()
+    {
+        Passenger otherName = new Passenger("Ben", "AA100", 1, false);
+        Passenger otherFlight = new Passenger("Ana", "DL200", 1, false);
+
+        assertFalse(ana.equals(otherName));
+        assertFalse(ana.equals(otherFlight));
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Tests that a passenger is not equal to null or to an object
+     * that is not a Passenger.
+     */
+    public void testEqualsNullAndOtherType()
+    {
+        Object notPassenger = "Ana";
+
+        assertFalse(ana.equals(null));
+        assertFalse(ana.equals(notPassenger));
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Tests that toString includes every field.
+     */
+    public void testToString()
+    {
+        String text = ana.toString();
+
+        assertTrue(text.contains("Passenger: Ana"));
+        assertTrue(text.contains("Flight: AA100"));
+        assertTrue(text.contains("Queue Number: 1"));
+        assertTrue(text.contains("Priority: false"));
+        assertTrue(text.contains("Screening Status: Waiting"));
     }
 }
