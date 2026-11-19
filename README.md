@@ -74,9 +74,9 @@ Airport security queue system that allows customers to check in ahead of time an
 | `Main.java` | Jack | Author | Added preLoadedPassengers in D4 to make running an exmaple easier/better
 | `QueueTest.java` | Ethan | Author |
 | `PassengerTest.java` | Tiffany | Author |
-| `SecuritySystemTest.java` | N/A | Not yet written |
-| `SecurityViewTest.java` | N/A | Not yet written |
-| `MainTest.java` | N/A | Not yet written |
+| `SecuritySystemTest.java` | Ethan | Wrote, GenAI-assisted |
+| `SecurityViewTest.java` | Ethan | Wrote, GenAI-assisted |
+| `MainTest.java` | Ethan | Wrote, GenAI-assisted |
 
 
 # Gen AI Usage
