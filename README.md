@@ -58,7 +58,7 @@ Airport security queue system that allows customers to check in ahead of time an
     - A first failed scan isn't counted in the end of day stats
     - The wait estimate always uses the Standard lane, so priority and rescreen passengers see the same estimate as standard passengers at the same position
     - Whether a passenger fails is random, so during a demo the second attempt might not show up right away
-    - [TODO: anything else the team knows about]
+    
 
 
 
