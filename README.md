@@ -32,10 +32,10 @@ Airport security queue system that allows customers to check in ahead of time an
         - Not in spec
    
 - **Does the Model Stand Alone?**
-        - Yes, the SecuritySystem, Passenger, and Queue classes never print, read input, or reference the view or controller classes. All of the rule checks and logic is handled in the model, and throws exceptions when needed.
+    - Yes, the SecuritySystem, Passenger, and Queue classes never print, read input, or reference the view or controller classes. All of the rule checks and logic is handled in the model, and throws exceptions when needed.
 
 - **Unknowns from the Scope**
-   - Figured out how to handle multiple security lanes by using a generic queue and creating three separate queues from it that inherit the logic
+   - Figured out how to handle multiple security lanes by using a generic queue and creating three separate queues from it that inherent the logic
    - Solved estimated wait time model by having a 3 minute final static field and multiplying it by the number of customers in each line
 
 - **What Doesn’t Work Yet?** 
@@ -50,60 +50,34 @@ Airport security queue system that allows customers to check in ahead of time an
 
 # Next Steps
 - **What’s Left to Finish the MVP**
-    - Write SecuritySystemTest
-    - Write SecurityViewTest
-    - Write MainTest
-
+ - Write SecuritySystemTest
+ - Write SecurityViewTest
+ - Write MainTest
 - **Change Feature**
-    - Feature: Send rescreened passengers back to the front for a second pass
-    - Right now, a passenger who sets off the scanner goes to the back of the rescreen lane. With this, the first time it happens they go back to the front of their own lane for a quick second pass instead of starting over. If they fail the second pass too, they go to the Rescreen lane like before
-    - This came from our scope, which planned a dequeue so travelers who set off the scanner would be sent back to the front instead of the back
-    - It is non-trivial because it adds new model logic and the officer reaches it through the controller and view when screening a passenger
+ - Feature: Send rescreened passengers back to the front for a second pass
+ - Right now, a passenger who sets off the scanner goes to the back of the rescreen lane. With this, the first time it happens they go back to the front of their own lane for a quick second pass instead of starting over. If they fail the second pass too, they go to the Rescreen lane like before
+ - This came from our scope, which planned a dequeue so travelers who set off the scanner would be sent back to the front instead of the back
+ - It is non-trivial because it adds new model logic and the officer reaches it through the controller and view when screening a passenger
 
 - **Classes we predict will change**
-    - Queue
-        - enqueueFront(T newEntry)
-    - SecuritySystem
-        - sendToRescreen
-        - callNext
-    - Main
-        - Add a third message “ _____ has been sent back to the front for a second pass”
-    - SecurityView
-        - showConfirmation
-
-- **New tests**
-    - `enqueueFront` on an empty queue, then `peek` and `dequeue` return that item
-    - `enqueueFront` on a queue with items puts the new item at position 1 and everything else moves back one
-    - `enqueueFront` then `enqueue` still adds to the back correctly
-    - With the rescreen chance set to 100, a passenger who fails once is at position 1 of their own lane with status "SECOND_PASS"
-    - The same passenger failing a second time ends up in the Rescreen lane instead
-    - With the rescreen chance set to 0, a second-pass passenger is cleared normally
-
-- **Stretch Goals**
-    - Doing: Priority security line, re-screening, estimated wait time, and end-of-day stats (all built in the prototype)
-    - Dropping: Average wait time in the end-of-day stats (would need real timestamps) and a GUI (the console view meets our needs)
-
-- **New Tests Needed**
-    - Tests for the fixes listed in What Doesn't Work Yet
-
-- **Who Does What**
-    - `SecuritySystemTest`: Ethan
-    - `SecurityViewTest` and bad-input cases: Ethan & Tiffany
-    - Null and duplicate check-in fixes: Tiffany
-    - Change feature (model): Jack & Tiffany
-    - Change feature (controller and view): Jack
+ - Queue
+    -enqueueFront(T newEntry)
 
 # Attribution
 
 | File | Who | How |
 |---|---|---|
-| `Queue.java` | Tiffany | Wrote |
-| `Passenger.java` | Tiffany, Jack | Tiffany wrote. Jack renamed `getFlightnumber` to `getFlightNumber` so the tests compile |
-| `SecuritySystem.java` | Jack | Wrote, GenAI-assisted |
-| `SecurityView.java` | Ethan, Jack | Ethan wrote the menus and input loops. Jack revised it to take the shared `Scanner` and added the methods `Main` needs (`readText`, `readLane`, `showLine`, `showError`, `showStats`), GenAI-assisted |
-| `Main.java` | Jack | Wrote, GenAI-assisted |
-| `QueueTest.java` | Ethan | Wrote | GenAI-assisted |
-| `PassengerTest.java` | Tiffany | Wrote (in progress) |
-| `SecuritySystemTest.java` | Ethan | Not yet written |
-| `SecurityViewTest.java` | Ethan | Not yet written |
-| `MainTest.java` | Ethan | Not yet written |
+| `Queue.java` | Tiffany, Jack | Co-authors | Tiffany wrote original class, Jack added one method to make compatible with the retry screening change feature
+| `Passenger.java` | Tiffany | Tiffany is the author. Jack made minor changes so the test class would run|
+| `SecuritySystem.java` | Jack | Author | Added method and made some edits to current methods to implement change feature
+| `SecurityView.java` | Ethan | Ethan wrote the menus and input loops. Jack revised it to take the shared `Scanner` and added the methods `Main` needs (`readText`, `readLane`, `showLine`, `showError`, `showStats`) |
+| `Main.java` | Jack | Author | Added preLoadedPassengers in D4 to make running an exmaple easier/better
+| `QueueTest.java` | Ethan | Author |
+| `PassengerTest.java` | Tiffany | Author |
+| `SecuritySystemTest.java` | N/A | Not yet written |
+| `SecurityViewTest.java` | N/A | Not yet written |
+| `MainTest.java` | N/A | Not yet written |
+
+
+# Gen AI Usage
+   - Gen AI was used to help brainstorm and draft some classes and methods. All suggestions were manually reviewed and manually inputed with user changes made when seen fit. We found AI to be particularly useful when writing the controller class, as it was able to decipher minor changes that needed to be made to other team members classes, and suggesting the best way to combine everything.
