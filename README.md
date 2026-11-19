@@ -49,20 +49,46 @@ Airport security queue system that allows customers to check in ahead of time an
 
 
 # Next Steps
-- **What’s Left to Finish the MVP**
- - Write SecuritySystemTest
- - Write SecurityViewTest
- - Write MainTest
-- **Change Feature**
- - Feature: Send rescreened passengers back to the front for a second pass
- - Right now, a passenger who sets off the scanner goes to the back of the rescreen lane. With this, the first time it happens they go back to the front of their own lane for a quick second pass instead of starting over. If they fail the second pass too, they go to the Rescreen lane like before
- - This came from our scope, which planned a dequeue so travelers who set off the scanner would be sent back to the front instead of the back
- - It is non-trivial because it adds new model logic and the officer reaches it through the controller and view when screening a passenger
+- **What's Left for the Final Build (in order)**
+    - Make `enqueue` and `enqueueFront` reject null, then add the two null tests back to `QueueTest`
+    - Block check-in for a passenger who is currently being screened, and add a test for it
+    - Decide whether a first failed scan should count in the rescreen stat, and update the code and test to match
+    - Replace "SCREENING_ATTEMPT_2" and the other status Strings with constants so `Main` and `SecuritySystem` can't get out of sync
+    - Make the wait estimate use the passenger's actual lane
+    - Run every test in Eclipse and fix anything Web-CAT flags for style
+    - Practice the demo
 
-- **Classes we predict will change**
- - Queue
-    -enqueueFront(T newEntry)
+- **Stretch Goals**
+    - Committing to: priority security line, re-screening (now with a second attempt), estimated wait time, and end of day stats (all built)
+    - Dropping: average wait time in the end of day stats (would need real timestamps) and a GUI (the console view meets our needs)
 
+- **What Our 3-Minute Demo Will Show**
+    - Start the program. It begins with 8 preloaded passengers
+    - Passenger menu
+        - Check in a new passenger
+        - Try a bad flight number like "123" to show the error message instead of a crash
+        - Check position and estimated wait time
+    - Officer menu
+        - View all lines to show the Standard, Priority, and Rescreen lanes
+        - Call the next passenger in the Standard lane and screen them
+        - **New feature:** when a passenger fails, show the "sent back to the front" message, then view all lines to show them at the front of their own lane
+        - Call and screen them again. If they fail a second time, show them land in the Rescreen lane
+        - Show the end of day stats
+    - Back to the start menu and quit
+    - Note: failing is random (50%), so we may need to screen a few passengers before the feature shows up
+
+- **Who Does What**
+    - Ethan
+        - Update all five test classes for any final changes
+        - Null and duplicate check-in tests
+        - SecurityView changes, if any are needed
+    - [TODO: Jack or Tiffany]
+        - Null fix in `Queue`
+        - Duplicate check-in fix in `SecuritySystem`
+    - [TODO: Jack or Tiffany]
+        - Status constants, rescreen stat decision, and the lane-based wait estimate
+    - Whole team
+        - Demo practice and the final README
 # Attribution
 
 | File | Who | How |
